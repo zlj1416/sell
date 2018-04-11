@@ -2,7 +2,8 @@
   <div class="goods">
     <div class="menu-wrapper" v-el:menu-wrapper>
       <ul>
-        <li v-for="item in goods" class="menu-item" :class="{'current':currentIndex===$index}">
+        <li v-for="item in goods" class="menu-item"
+            :class="{'current':currentIndex===$index}" @click="selectMenu($index, $event)">
           <span class="text border-1px">
             <span v-show="item.type>0" class="icon"
                   :class="classMap[item.type]"></span>{{ item.name }}
@@ -57,7 +58,7 @@
       };
     },
     computed: {
-      currentIndex() {
+      currentIndex () {
         for (let i = 0; i < this.listHeight.length; i++) {
           let height1 = this.listHeight[i];
           let height2 = this.listHeight[i + 1];
@@ -83,8 +84,19 @@
       });
     },
     methods: {
-      _initScroll() {
-        this.meunScroll = new BScroll(this.$els.menuWrapper, {});
+      selectMenu (index, event) {
+        if (!event._constructed) {
+          return;
+        }
+        let foodList = this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
+        let el = foodList[index];
+        this.foodsScroll.scrollToElement(el, 300);
+        console.log(index);
+      },
+      _initScroll () {
+        this.menuScroll = new BScroll(this.$els.menuWrapper, {
+          click: true
+        });
         this.foodsScroll = new BScroll(this.$els.foodsWrapper, {
           probeType: 3
         });
@@ -93,7 +105,7 @@
           this.scrollY = Math.abs(Math.round(pos.y));
         });
       },
-      _calculateHeight() {
+      _calculateHeight () {
         let foodList = this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
         let height = 0;
         this.listHeight.push(height);
@@ -199,14 +211,14 @@
             .count
               margin-right: 12px
           .price
-              font-weight: 700
-              line-height: 24px
-              .now
-                margin-right: 8px
-                font-size: 14px
-                color: rgb(240, 20, 20)
-              .old
-                text-decoration: line-through
-                font-size: 10px
-                color: rgb(147, 153, 159)
+            font-weight: 700
+            line-height: 24px
+            .now
+              margin-right: 8px
+              font-size: 14px
+              color: rgb(240, 20, 20)
+            .old
+              text-decoration: line-through
+              font-size: 10px
+              color: rgb(147, 153, 159)
 </style>
